@@ -5,12 +5,34 @@ import Playlist from './Playlist'
 import axios from 'axios';
 
 
-const UserProfile = ({profile, topTrack, isLoadingUser, fetchErrorUser, playlist, token}) => {
+const UserProfile = ({profile, topTrack, isLoadingUser, fetchErrorUser, token}) => {
     const [userId, setUserId] = useState('')
     const [searchKey, setSearchKey] = useState('')
     const [searchTrack, setSearchTrack] = useState([])
     const [isValidSearch, setIsValidSearch] = useState(true)
+    const [playlist, setPlaylist] = useState([])
+
     const SEARCH_ENDPOINT = 'https://api.spotify.com/v1/search'
+
+   
+
+    const fetchData = async() =>{
+        try{
+            const response = await axios.get('https://api.spotify.com/v1/me/playlists', {
+                headers:{
+                    Authorization:`Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            setPlaylist(response.data)
+        }catch(err){
+            console.log(err.message)
+        }
+            
+        
+    }
+    
+    
+
 
     const handleSearchKey = async (e) => {
         e.preventDefault()
@@ -37,8 +59,15 @@ const UserProfile = ({profile, topTrack, isLoadingUser, fetchErrorUser, playlist
         if(profile){
             setUserId(profile.id)
         }    
-
     }, [profile])
+
+    useEffect(() => {
+
+        fetchData()
+    },[playlist])
+
+    
+
   return (
     <div className='profile_container'>
         {isLoadingUser && <p className='loading'>Loading...</p>}

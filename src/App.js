@@ -10,7 +10,6 @@ import Structure from './Structure';
 import { useState, useEffect } from 'react';
 import useAxiosFetchTracks from './hooks/useAxiosFetchTracks';
 import useAxiosFetchUsers from './hooks/useAxiosFetchUsers';
-import useAxiosFetchPlaylist from './hooks/useAxiosFetchPlaylist';
 import note from './img/noteIcon.png'
 import add from './img/addIcon.png'
 
@@ -18,12 +17,10 @@ import add from './img/addIcon.png'
 
 function App() {
   
-  const PLAYLISTS_ENDPOINT = 'https://api.spotify.com/v1/me/playlists'
   const PROFILE_ENDPOINT = "https://api.spotify.com/v1/me"
   const TRACK_ENDPOINT = "https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=10"
   
   const [token, setToken] = useState('')
-  const [playlist, setPlaylist] = useState([])
   const [profile, setProfile] = useState([])
   const [topTrack, setTopTrack] = useState({})
 
@@ -48,7 +45,6 @@ function App() {
 
 const {dataTrack, fetchErrorTrack, isLoadingTrack} = useAxiosFetchTracks(TRACK_ENDPOINT, token)
 const {dataUser, fetchErrorUser, isLoadingUser} = useAxiosFetchUsers(PROFILE_ENDPOINT,token)
-const {dataPlaylist, fetchErrorPlaylist, isLoadingPlaylist} = useAxiosFetchPlaylist(PLAYLISTS_ENDPOINT, token)
 
   
 
@@ -60,9 +56,6 @@ const {dataPlaylist, fetchErrorPlaylist, isLoadingPlaylist} = useAxiosFetchPlayl
     setProfile(dataUser);
   }, [dataUser]);
 
-  useEffect(() => {
-    setPlaylist(dataPlaylist);
-  }, [dataPlaylist]);
 
 
 
@@ -109,7 +102,6 @@ const handleLogout = () => {
                 token = {token}
                 profile = {profile}
                 topTrack = {topTrack}
-                playlist = {playlist}
                 isLoadingUser = {isLoadingUser}
                 fetchErrorUser = {fetchErrorUser}
               />

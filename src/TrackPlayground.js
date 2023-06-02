@@ -41,6 +41,9 @@ const TrackPlayground = ({topTrack, token ,isLoadingTrack, fetchErrorTrack}) => 
     const filterValence = useRef(null)
     const history = useNavigate()
 
+    
+
+
     useEffect(() => {
         // Store the track ID in sessionStorage
         sessionStorage.setItem('trackId', id);
@@ -64,6 +67,7 @@ const TrackPlayground = ({topTrack, token ,isLoadingTrack, fetchErrorTrack}) => 
 
     
     const CREATEPLAYLIST_ENDPOINT = `https://api.spotify.com/v1/users/${userId}/playlists`
+
 
     
     
@@ -111,10 +115,8 @@ const TrackPlayground = ({topTrack, token ,isLoadingTrack, fetchErrorTrack}) => 
     const handlePlaylist = async (curTrackId) => {
 
         try{
-            const playlistid_local = localStorage.getItem('RecommandedPlaylist')
-            // if(playlistid_local){
-            //     setPlaylistId(playlistid_local)
-            // }
+            
+            const playlistid_local = sessionStorage.getItem('RecommandedPlaylist')
             if(!playlistid_local && userId){
                 const response = await axios.post(CREATEPLAYLIST_ENDPOINT,{
                     name: 'Recommand Playlist',
@@ -128,7 +130,7 @@ const TrackPlayground = ({topTrack, token ,isLoadingTrack, fetchErrorTrack}) => 
                   }
                 );
                // setPlaylistId(response.data.id); // set the playlist ID in state
-                localStorage.setItem('RecommandedPlaylist',response.data.id)
+               sessionStorage.setItem('RecommandedPlaylist',response.data.id)
                 // console.log('Playlist created:', response.data);
                 
                 await axios.post(`https://api.spotify.com/v1/playlists/${response.data.id}/tracks`, {
