@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import Tracklist from './Tracklist'
 import Playlist from './Playlist'
 import axios from 'axios';
+import useAxiosFetchPlaylist from './hooks/useAxiosFetchPlaylist';
 
 
 const UserProfile = ({profile, topTrack, isLoadingUser, fetchErrorUser, token}) => {
@@ -13,23 +14,24 @@ const UserProfile = ({profile, topTrack, isLoadingUser, fetchErrorUser, token}) 
     const [playlist, setPlaylist] = useState([])
 
     const SEARCH_ENDPOINT = 'https://api.spotify.com/v1/search'
+    const PLAYLIST_ENDPOINT = 'https://api.spotify.com/v1/me/playlists'
 
-   
+    const {dataPlaylist, fetchErrorPlaylist, isLoadingPlaylist} = useAxiosFetchPlaylist(PLAYLIST_ENDPOINT, token)
 
-    const fetchData = async() =>{
-        try{
-            const response = await axios.get('https://api.spotify.com/v1/me/playlists', {
-                headers:{
-                    Authorization:`Bearer ${localStorage.getItem('token')}`
-                }
-            })
-            setPlaylist(response.data)
-        }catch(err){
-            console.log(err.message)
-        }
+    // const fetchData = async() =>{
+    //     try{
+    //         const response = await axios.get('https://api.spotify.com/v1/me/playlists', {
+    //             headers:{
+    //                 Authorization:`Bearer ${localStorage.getItem('token')}`
+    //             }
+    //         })
+    //         setPlaylist(response.data)
+    //     }catch(err){
+    //         console.log(err.message)
+    //     }
             
         
-    }
+    // }
     
     
 
@@ -62,9 +64,11 @@ const UserProfile = ({profile, topTrack, isLoadingUser, fetchErrorUser, token}) 
     }, [profile])
 
     useEffect(() => {
-
-        fetchData()
-    },[playlist])
+        if(dataPlaylist){
+            setPlaylist(dataPlaylist)
+        }
+    
+    },[dataPlaylist])
 
     
 
